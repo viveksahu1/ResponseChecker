@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Breakpoint Tester</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #121217;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      user-select: none;
+    }
+
+    h2 {
+      font-weight: 600;
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #00e0ff;
+      text-shadow: 0 0 8px #00e0ffaa;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* Main container with left and right sections side by side */
+    #main-container {
+      display: flex;
+      gap: 40px;
+      width: 100%;
+      max-width: 1200px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    /* Left side: form container */
+    #left-section {
+      flex: 1 1 350px;
+      max-width: 450px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px 25px;
+      width: 100%;
+      background: #1f1f2b;
+      border-radius: 14px;
+      padding: 30px 30px 40px;
+      box-shadow:
+        inset 0 0 8px #00e0ff44,
+        0 8px 24px rgb(0 224 255 / 0.35);
+      transition: box-shadow 0.3s ease;
+    }
+
+    form:hover {
+      box-shadow:
+        inset 0 0 16px #00e0ff88,
+        0 12px 36px rgb(0 224 255 / 0.6);
+    }
+
+    /* Floating label style */
+    .input-group {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 16px 14px 16px 14px;
+      background: #2a2a3d;
+      border: 2px solid #2a2a3d;
+      border-radius: 12px;
+      color: #eee;
+      font-size: 1rem;
+      font-weight: 400;
+      outline-offset: 2px;
+      transition:
+        border-color 0.3s ease,
+        background-color 0.3s ease;
+      cursor: text;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: #00e0ff;
+      background: #161621;
+      cursor: text;
+      color: #fff;
+    }
+
+    .input-group label {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-weight: 600;
+      font-size: 1rem;
+      pointer-events: none;
+      user-select: none;
+      transition: 0.2s ease all;
+      background: #1f1f2b;
+      padding: 0 6px;
+      border-radius: 4px;
+    }
+
+    /* Float label when input has value or focus */
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label,
+    .input-group select:focus + label,
+    .input-group select:not([value=""]) + label {
+      top: 6px;
+      font-size: 0.75rem;
+      color: #00e0ff;
+      font-weight: 600;
+    }
+
+    /* Remove default arrow in select and custom arrow */
+    .input-group select {
+      padding-right: 34px;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #00e0ff 50%),
+        linear-gradient(135deg, #00e0ff 50%, transparent 50%);
+      background-position:
+        calc(100% - 20px) calc(50% - 3px),
+        calc(100% - 15px) calc(50% - 3px);
+      background-size: 7px 7px;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .input-group select:focus {
+      background-image:
+        linear-gradient(45deg, transparent 50%, #0ff 50%),
+        linear-gradient(135deg, #0ff 50%, transparent 50%);
+    }
+
+    /* Number inputs smaller width */
+    #width, #height {
+      max-width: 120px;
+    }
+
+    button {
+      grid-column: span 1;
+      background: linear-gradient(90deg, #00e0ff, #00a6ff);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      color: #121217;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px #00a6ffaa;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      justify-self: stretch;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #00a6ff, #00e0ff);
+      box-shadow: 0 10px 30px #00e0ffcc;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    /* Right side: iframe container */
+    #right-section {
+      flex: 1 1 600px;
+      max-width: 720px;
+    }
+
+    /* Iframe container with subtle shadow */
+    #iframe-container {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow:
+        0 8px 28px rgba(0, 224, 255, 0.35);
+      background: #000;
+      position: relative;
+      border: 2px solid #00e0ff55;
+    }
+
+    iframe {
+      display: block;
+      width: 104% !important;
+      height: 667px;
+      border: none;
+      background: white;
+      border-radius: 14px;
+      transition: height 0.3s ease;
+    }
+
+    /* Loading spinner */
+    #loading {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border: 3.5px solid #00e0ff44;
+      border-top-color: #00e0ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+      user-select: none;
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: 0 0 12px #00e0ff88;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      #main-container {
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+      }
+      #left-section, #right-section {
+        max-width: 100%;
+        flex: none;
+        width: 100%;
+      }
+      iframe {
+        height: 500px;
+      }
+      #width, #height {
+        max-width: 100%;
+      }
+      form {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      color: #555;
+      font-size: 0.9rem;
+      user-select: none;
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🧭 Responsive Breakpoint Tester </h2>
+
+  <div id="main-container">
+    <section id="left-section">
+      <form id="tester-form" autocomplete="off" spellcheck="false" novalidate>
+        <div class="input-group">
+          <input
+            id="url"
+            type="text"
+            placeholder="Enter any URL (https://...)"
+            required
+            aria-label="URL to test"
+          />
+          <label for="url">URL</label>
+        </div>
+
+        <div class="input-group">
+          <select id="preset" aria-label="Select device preset">
+            <option value="" selected disabled>Select device preset</option>
+            <option value="375x667">iPhone 8 (375×667)</option>
+            <option value="414x896">iPhone 11 Pro Max (414×896)</option>
+            <option value="360x640">Pixel 2 (360×640)</option>
+            <option value="768x1024">iPad (768×1024)</option>
+            <option value="1440x900">Laptop (1440×900)</option>
+            <option value="1920x1080">Full HD (1920×1080)</option>
+          </select>
+          <label for="preset">Device Preset</label>
+        </div>
+
+        <div class="input-group">
+          <input
+            id="width"
+            type="number"
+            min="100"
+            max="4000"
+            value="375"
+            required
+            aria-label="Width in pixels"
+          />
+          <label for="width">Width (px)</label>
+        </div>
+
+        <div class="input-group">
+          <input
+            id="height"
+            type="number"
+            min="100"
+            max="4000"
+            value="667"
+            required
+            aria-label="Height in pixels"
+          />
+          <label for="height">Height (px)</label>
+        </div>
+
+        <button type="submit" aria-label="Load preview iframe">Load</button>
+      </form>
+    </section>
+
+    <section id="right-section">
+      <div id="iframe-container">
+        <div id="loading" aria-hidden="true"></div>
+        <iframe
+          id="preview"
+          src=""
+          sandbox="allow-scripts allow-same-origin"
+          title="Responsive preview iframe"
+        ></iframe>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    &copy; 2025 Vivek Sahu &mdash; Responsive Breakpoint Tester
+  </footer>
+
+  <script>
+    const urlInput = document.getElementById('url');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const presetSelect = document.getElementById('preset');
+    const form = document.getElementById('tester-form');
+    const iframe = document.getElementById('preview');
+    const iframeContainer = document.getElementById('iframe-container');
+    const loading = document.getElementById('loading');
+
+    function validateUrl(url) {
+      try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+      } catch {
+        return false;
+      }
+    }
+
+    function updateIframeSize(width, height) {
+      iframe.style.height = height + 'px';
+      iframeContainer.style.width = width + 'px';
+      iframeContainer.style.height = height + 'px';
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const url = urlInput.value.trim();
+      const width = parseInt(widthInput.value, 10);
+      const height = parseInt(heightInput.value, 10);
+
+      if (!validateUrl(url)) {
+        alert('Please enter a valid URL starting with http:// or https://');
+        urlInput.focus();
+        return;
+      }
+      if (isNaN(width) || width < 100 || width > 4000) {
+        alert('Width must be a number between 100 and 4000.');
+        widthInput.focus();
+        return;
+      }
+      if (isNaN(height) || height < 100 || height > 4000) {
+        alert('Height must be a number between 100 and 4000.');
+        heightInput.focus();
+        return;
+      }
+
+      updateIframeSize(width, height);
+
+      loading.style.display = 'block';
+
+      const proxyUrl = `http://localhost:3000/proxy?url=${encodeURIComponent(url)}`;
+      iframe.src = proxyUrl;
+    });
+
+    iframe.addEventListener('load', () => {
+      loading.style.display = 'none';
+    });
+
+    presetSelect.addEventListener('change', () => {
+      if (!presetSelect.value) return;
+      const [w, h] = presetSelect.value.split('x').map(Number);
+      widthInput.value = w;
+      heightInput.value = h;
+      updateIframeSize(w, h);
+    });
+
+    // Focus URL on load for better UX
+    urlInput.focus();
+  </script>
+</body>
+</html>
